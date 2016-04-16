@@ -38,11 +38,12 @@ for m in range(16):
         N_speed.append(speed[m].text.strip())
     else:
         S_speed.append(speed[m].text.strip())
+
 for n in range(7):
-    s = "北上 "+N_start[n]+" "+N_final[n]+" "+N_speed[n]
+    s = "北上 "+N_start[n]+" 至 "+N_final[n]+" "
     total.append(s)
 for n in range(7):
-    s = "南下 "+S_start[n]+" "+S_final[n]+" "+S_speed[n]
+    s = "南下 "+S_start[n]+" 至 "+S_final[n]+" "
     total.append(s)
 #print (total)
 
@@ -57,30 +58,32 @@ while True:
     line = fr.readline()
     if not line: break
     if i < 7:
-        if line[:len(line)-1] == N_speed[i]:
+        if int(line[:len(line)-1]) <= 40:
             if int(N_speed[i]) <= 40:
                 Ncount += 1
                 payload = {'robot_id': '108143422899450', 'content': total[i], 'lng': '120', 'lat': '23'}
                 req = requests.post("http://52.192.20.250/chat/create/robot/", data=payload)
                 print (req.status_code)
+                #print (total[i]+"擁塞")
     if i >= 7 & i < 14:
-        if line[:len(line)-1] == S_speed[i-7]:
+        if int(line[:len(line)-1]) <=40:
             if int(S_speed[i-7]) <= 40:
                 Scount += 1
                 payload = {'robot_id': '108143422899450', 'content': total[i], 'lng': '120', 'lat': '23'}
                 req = requests.post("http://52.192.20.250/chat/create/robot/", data=payload)
                 print (req.status_code)
+                #print (total[i]+"擁塞")
     i += 1
 if Ncount == 0 & Scount == 0:
     payload = {'robot_id': '108143422899450', 'content': '全線順暢', 'lng': '120', 'lat': '23'}
     req = requests.post("http://52.192.20.250/chat/create/robot/", data=payload)
     print (req.status_code)
+    #print ("全線順暢")
 else:
-    Ncount = 0
-    Scount = 0
     payload = {'robot_id': '108143422899450', 'content': '其他順暢', 'lng': '120', 'lat': '23'}
     req = requests.post("http://52.192.20.250/chat/create/robot/", data=payload)
     print (req.status_code)
+    #print ("其他順暢")
 fr.close()
 
 # post
